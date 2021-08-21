@@ -12,10 +12,10 @@
 
 ## Proposed Solution
 
-- Create a HomePage component where the table will be displayed
+- Create a HomePage component where we will display the list of movies
   - Inside the HomePage component create a movie interface for the movie object returned by the API
   - Create a List component which will render every single movie 
-- 
+- Create a Pagination component to use it inside the HomePage component
 
 ## Screenshots
 ![alt text](https://github.com/CodeWithDragos/frontend-interview-pagination-AlexZahar/blob/master/pagination_task/example.png?raw=true)
@@ -25,6 +25,7 @@
 - React.js
 - Create React App for project setup
 - TypeScript
+- React Router and React Router Dom
 - StyledComponents
 - Cypress for end to end testing
   

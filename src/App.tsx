@@ -1,13 +1,10 @@
-
-
-import './App.css';
+import "./App.css";
+import HomePage from "./components/HomePage";
 
 function App() {
-  
   return (
     <div className="App">
-      <h1>Hello there!</h1>
-      <button onClick={() => (alert("Hello world!"))} data-cy="btn-hello">Click me!</button>
+      <HomePage></HomePage>
     </div>
   );
 }
