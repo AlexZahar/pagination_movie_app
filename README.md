@@ -1,8 +1,10 @@
-## PROJECT_NAME
-
-*TODO: [ADD_TASK_REQUIREMENTS_HERE]*
-
-[Sophie Lewis](mailto:sophie@codewithdragos.com)
+## Movie app displayed using pagination
+1. The component should make a request to the movie api and build a pagination component
+2. The design should be fully responsive
+3. The first and last buttons should be disabled as long as we are not in the last and first page available.
+4. The next and previous buttons should be disabled as long as we are not in the last and first page available.
+5. If the user click twice on the same page, the results should be cached so there are few requests to the database.
+6. The pagination should show 10 elements per page
 
 ## Assumptions
 
@@ -10,7 +12,6 @@
 
 ## Proposed Solution
 
-*TODO: [ADD_SOLUTION_DESCRIPTION]*
 - break down the steps you followed
 - use bullet points to explain it in a very structured way
 
@@ -21,7 +22,10 @@
 
 - React.js
 - Create React App for project setup
-- ...
+- TypeScript
+- StyledComponents
+- Cypress for end to end testing
+  
 
 ## Setup
 
