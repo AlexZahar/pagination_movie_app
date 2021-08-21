@@ -12,8 +12,10 @@
 
 ## Proposed Solution
 
-- break down the steps you followed
-- use bullet points to explain it in a very structured way
+- Create a HomePage component where the table will be displayed
+  - Inside the HomePage component create a movie interface for the movie object returned by the API
+  - Create a List component which will render every single movie 
+- 
 
 ## Screenshots
 ![alt text](https://github.com/CodeWithDragos/frontend-interview-pagination-AlexZahar/blob/master/pagination_task/example.png?raw=true)
