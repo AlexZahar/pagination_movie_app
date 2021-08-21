@@ -18,18 +18,30 @@ export interface IState {
 function HomePage() {
   const [movies, setMovies] = useState<IState["movies"]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   // Fetching a list of movies for test
   async function fetchMovieList() {
-    const response = await fetch(`${apiUrl}&s=batman&page=5`);
-    const data = await response.json();
-    setMovies(data.Search);
-    setLoading(false);
+    await fetch(`${apiUrl}&s=batman&page=99`)
+      .then((response) => {
+        console.log(response);
+        if (response.ok) return response.json();
+        throw new Error("something went wrong while requesting posts");
+      })
+      .then((data) => {
+        console.log("data", data);
+        if (data.Error) {
+          setError(data.Error);
+          return;
+        }
+        setMovies(data.Search);
+        setLoading(false);
+      })
+      .catch((error) => console.log(error));
   }
 
   useEffect(() => {
     fetchMovieList();
-    console.log("useEffect", movies);
   }, []);
 
   return (
@@ -46,7 +58,7 @@ function HomePage() {
           <List movies={movies}> </List>
         </table>
       ) : (
-        <p>Waiting for data to be fetched...</p>
+        <h2>Error: {error}</h2>
       )}
     </div>
   );
