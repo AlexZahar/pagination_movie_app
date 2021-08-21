@@ -15,7 +15,7 @@
 - use bullet points to explain it in a very structured way
 
 ## Screenshots
-![alt text](screens/demo.png)
+![alt text](https://github.com/CodeWithDragos/frontend-interview-pagination-AlexZahar/blob/master/pagination_task/example.png?raw=true)
 
 ## Libraries / Tools Used
 
