@@ -23,23 +23,18 @@ function HomePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [movieTitle, setMovieTitle] = useState("");
-  const [pagination, setPagination] = useState<IState["pagination"]>([""]);
-  const [activePage, setActivePage] = useState<IState["activePage"]>("1");
+  const [pagination, setPagination] = useState<IState["pagination"]>([]);
+  const [activePage, setActivePage] = useState<IState["activePage"]>("");
   // Fetching a list of movies for test
-  async function fetchMovieList(title?: string, page?: string) {
-    // if (!title || !page) {
-    //   title = movieTitle;
-    //   page = pagination;
-    // }
+
+  async function fetchMovieList(title: string, page?: string) {
     await fetch(`${apiUrl}&s=${title}&page=${activePage}`)
       // await fetch(`${apiUrl}&s=${title}&page=${page}`)
       .then((response) => {
-        console.log(response);
         if (response.ok) return response.json();
         throw new Error("something went wrong while requesting posts");
       })
       .then((data) => {
-        console.log("data", data);
         if (data.Error) {
           setError(data.Error);
           return;
@@ -47,28 +42,36 @@ function HomePage() {
         // Populate the movie list array
         setMovies(data.Search);
 
-        // Calculate the number of pages from the total search result. Using Math.ceil() to round the number up to the next largest integer.
-        const totalPages = Math.ceil(parseInt(data.totalResults) / 10);
-        const pages = [];
-        for (let p = 1; p <= totalPages; p++) {
-          pages.push(p.toString());
+        // Calculate the number of pages available for this title only if not calculated before.
+        if (!pagination.length) {
+          console.log("calculating pagination");
+
+          //  Using Math.ceil() to round pages number up to the next largest integer.
+          const totalPages = Math.ceil(parseInt(data.totalResults) / 10);
+          const pages = [];
+          for (let p = 1; p <= totalPages; p++) {
+            pages.push(p.toString());
+          }
+          setPagination(pages);
         }
-        setPagination(pages);
         setLoading(false);
       })
       .catch((error) => console.log(error));
   }
 
   useEffect(() => {
+    console.log("changed");
     fetchMovieList(movieTitle, activePage);
-    console.log(activePage, "activeee use efect");
-  }, []);
+  }, [activePage]);
 
   // Saving the user input movie title into it's own state
   const handleTitleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setMovieTitle(e.target.value);
   };
 
+  const handleNewPage = (page: string) => {
+    setActivePage(page);
+  };
   return (
     <div>
       <div>
@@ -96,6 +99,7 @@ function HomePage() {
             pagination={pagination}
             activePage={activePage}
             setActivePage={setActivePage}
+            handleNewPage={handleNewPage}
           ></Pagination>
         </div>
       ) : (

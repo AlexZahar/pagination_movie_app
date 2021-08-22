@@ -1,24 +1,23 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { IState as Props } from "./HomePage";
 interface IProps {
   pagination: Props["pagination"];
   activePage: Props["activePage"];
   setActivePage: React.Dispatch<React.SetStateAction<IProps["activePage"]>>;
+  handleNewPage: (page: string) => void;
 }
-// function Pagination({ pagination }) {
-//   return <div className="PaginationWrapper">{pagination}</div>;
-// }
 
 const Pagination: React.FC<IProps> = ({
   pagination,
   activePage,
   setActivePage,
+  handleNewPage,
 }) => {
-  function handlePageClick(index: string): void {
-    console.log("picked page", index);
-    setActivePage(index);
-    console.log("active page", activePage);
-  }
+  const [currentPage, setCurrentPage] = useState("1");
+
+  useEffect(() => {
+    console.log("moving to page number:", currentPage);
+  }, [currentPage]);
 
   const renderPagination = () => {
     return pagination.map((page) => {
@@ -26,7 +25,10 @@ const Pagination: React.FC<IProps> = ({
         <div
           key={page}
           onClick={() => {
-            handlePageClick(page);
+            // setPageIndex(pagination.indexOf(page));
+            // console.log(currentPageIndex, "current page index");
+            setCurrentPage(page);
+            handleNewPage(page);
           }}
         >
           {page}
@@ -34,9 +36,48 @@ const Pagination: React.FC<IProps> = ({
       );
     });
   };
+  const handleNextPage = () => {
+    //   Prevent counter from going higher than the length of the array
+    if (parseInt(currentPage) === pagination.length) {
+      return;
+    }
+    const nextPage = (parseInt(currentPage) + 1).toString();
+    setCurrentPage(nextPage);
+    handleNewPage(nextPage);
+    console.log(nextPage, "nextpage");
+  };
+
+  const handlePrevPage = () => {
+    //   Prevent counter from going negative
+    if (parseInt(currentPage) === 0) {
+      return;
+    }
+    const prevPage = (parseInt(currentPage) - 1).toString();
+    setCurrentPage(prevPage);
+    handleNewPage(prevPage);
+    console.log(prevPage, "nextpage");
+  };
   return (
-    <div>
-      <div>{renderPagination()}</div>
+    <div className="PaginationParrent">
+      <button
+        onClick={() => {
+          handleNewPage(pagination[0]);
+        }}
+      >
+        First Page
+      </button>
+      <div className="PaginationChildWrapper">
+        <h3 onClick={() => handlePrevPage()}> &#8592; </h3>
+        <div>{renderPagination()}</div>
+        <h3 onClick={() => handleNextPage()}>&#8594;</h3>
+      </div>
+      <button
+        onClick={() => {
+          handleNewPage(pagination[pagination.length - 1]);
+        }}
+      >
+        Last Page
+      </button>
     </div>
   );
 };
