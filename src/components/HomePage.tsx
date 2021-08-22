@@ -23,7 +23,7 @@ function HomePage() {
   const [loading, setLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState("");
-  const [movieTitle, setMovieTitle] = useState("Jumbo");
+  const [movieTitle, setMovieTitle] = useState("");
   const [pagination, setPagination] = useState<IState["pagination"]>([]);
   const [activePage, setActivePage] = useState<IState["activePage"]>("");
   // Fetching a list of movies for test
@@ -129,14 +129,13 @@ function HomePage() {
 
             <List movies={movies}> </List>
           </table>
-          {pagination.length > 1 ? (
-            <Pagination
-              pagination={pagination}
-              activePage={activePage}
-              setActivePage={setActivePage}
-              handleNewPage={handleNewPage}
-            />
-          ) : null}
+
+          <Pagination
+            pagination={pagination}
+            activePage={activePage}
+            setActivePage={setActivePage}
+            handleNewPage={handleNewPage}
+          />
         </div>
       ) : (
         <p>{error}</p>
