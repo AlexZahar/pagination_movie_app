@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import List from "./List";
+import Pagination from "./Pagination";
 
 const apiUrl = "http://www.omdbapi.com/?apikey=2827a2ec";
 // http://www.omdbapi.com/?i=tt3896198&apikey=2827a2ec
@@ -13,22 +14,24 @@ export interface IState {
     Year: string;
     imdbID: string;
   }[];
+  pagination: string[];
+  activePage: string;
 }
 
 function HomePage() {
   const [movies, setMovies] = useState<IState["movies"]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [movieTitle, setMovieTitle] = useState("Mamba");
-  const [pagination, setPagination] = useState([""]);
-
+  const [movieTitle, setMovieTitle] = useState("");
+  const [pagination, setPagination] = useState<IState["pagination"]>([""]);
+  const [activePage, setActivePage] = useState<IState["activePage"]>("1");
   // Fetching a list of movies for test
-  async function fetchMovieList(title?: string, page?: Array<string>) {
+  async function fetchMovieList(title?: string, page?: string) {
     // if (!title || !page) {
     //   title = movieTitle;
     //   page = pagination;
     // }
-    await fetch(`${apiUrl}&s=${title}`)
+    await fetch(`${apiUrl}&s=${title}&page=${activePage}`)
       // await fetch(`${apiUrl}&s=${title}&page=${page}`)
       .then((response) => {
         console.log(response);
@@ -57,7 +60,8 @@ function HomePage() {
   }
 
   useEffect(() => {
-    fetchMovieList(movieTitle, pagination);
+    fetchMovieList(movieTitle, activePage);
+    console.log(activePage, "activeee use efect");
   }, []);
 
   // Saving the user input movie title into it's own state
@@ -77,18 +81,25 @@ function HomePage() {
         <button onClick={() => fetchMovieList(movieTitle)}>Search Title</button>
       </div>
       {!loading ? (
-        <table>
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Release Year</th>
-            </tr>
-          </thead>
+        <div>
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Release Year</th>
+              </tr>
+            </thead>
 
-          <List movies={movies}> </List>
-        </table>
+            <List movies={movies}> </List>
+          </table>
+          <Pagination
+            pagination={pagination}
+            activePage={activePage}
+            setActivePage={setActivePage}
+          ></Pagination>
+        </div>
       ) : (
-        <h2>Error: {error}</h2>
+        <h2>Choose a movie title</h2>
       )}
     </div>
   );

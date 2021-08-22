@@ -1,6 +1,8 @@
 import React from "react";
-import { IState as IProps } from "./HomePage";
-
+import { IState as Props } from "./HomePage";
+interface IProps {
+  movies: Props["movies"];
+}
 const List: React.FC<IProps> = ({ movies }) => {
   const renderList = (): JSX.Element[] => {
     return movies.map((movie) => {
