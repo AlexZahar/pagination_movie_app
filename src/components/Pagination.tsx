@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function Pagination() {
-    return (
-        <div>
-            
-        </div>
-    )
+  return <div className="PaginationWrapper"></div>;
 }
 
-export default Pagination
+export default Pagination;

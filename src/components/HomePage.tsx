@@ -19,10 +19,17 @@ function HomePage() {
   const [movies, setMovies] = useState<IState["movies"]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [movieTitle, setMovieTitle] = useState("Mamba");
+  const [pagination, setPagination] = useState([""]);
 
   // Fetching a list of movies for test
-  async function fetchMovieList() {
-    await fetch(`${apiUrl}&s=batman&page=99`)
+  async function fetchMovieList(title?: string, page?: Array<string>) {
+    // if (!title || !page) {
+    //   title = movieTitle;
+    //   page = pagination;
+    // }
+    await fetch(`${apiUrl}&s=${title}`)
+      // await fetch(`${apiUrl}&s=${title}&page=${page}`)
       .then((response) => {
         console.log(response);
         if (response.ok) return response.json();
@@ -41,11 +48,25 @@ function HomePage() {
   }
 
   useEffect(() => {
-    fetchMovieList();
+    fetchMovieList(movieTitle, pagination);
   }, []);
+
+  // Saving the user input movie title into it's own state
+  const handleTitleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMovieTitle(e.target.value);
+  };
 
   return (
     <div>
+      <div>
+        <input
+          type="text"
+          value={movieTitle}
+          placeholder="Search your title"
+          onChange={handleTitleChange}
+        />
+        <button onClick={() => fetchMovieList(movieTitle)}>Search Title</button>
+      </div>
       {!loading ? (
         <table>
           <thead>
