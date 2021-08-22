@@ -60,19 +60,35 @@ const Pagination: React.FC<IProps> = ({
   return (
     <div className="PaginationParrent">
       <button
+        disabled={currentPage === pagination[0]}
         onClick={() => {
+          setCurrentPage(pagination[0]);
           handleNewPage(pagination[0]);
         }}
       >
         First Page
       </button>
       <div className="PaginationChildWrapper">
-        <button onClick={() => handlePrevPage()}> &#8592; </button>
+        <button
+          disabled={currentPage === pagination[0]}
+          onClick={() => handlePrevPage()}
+        >
+          {" "}
+          &#8592;{" "}
+        </button>
         <div>{renderPagination()}</div>
-        <button onClick={() => handleNextPage()}>&#8594;</button>
+        <button
+          disabled={currentPage === pagination[pagination.length - 1]}
+          onClick={() => handleNextPage()}
+        >
+          &#8594;
+        </button>
       </div>
       <button
+        disabled={currentPage === pagination[pagination.length - 1]}
         onClick={() => {
+          console.log("LENGHT -1", pagination[pagination.length - 1]);
+          setCurrentPage(pagination[pagination.length - 1]);
           handleNewPage(pagination[pagination.length - 1]);
         }}
       >
