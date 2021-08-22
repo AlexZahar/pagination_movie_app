@@ -41,7 +41,16 @@ function HomePage() {
           setError(data.Error);
           return;
         }
+        // Populate the movie list array
         setMovies(data.Search);
+
+        // Calculate the number of pages from the total search result. Using Math.ceil() to round the number up to the next largest integer.
+        const totalPages = Math.ceil(parseInt(data.totalResults) / 10);
+        const pages = [];
+        for (let p = 1; p <= totalPages; p++) {
+          pages.push(p.toString());
+        }
+        setPagination(pages);
         setLoading(false);
       })
       .catch((error) => console.log(error));
