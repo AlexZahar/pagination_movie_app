@@ -97,6 +97,10 @@ function HomePage() {
 
   const handleNewPage = (page: string) => {
     setActivePage(page);
+    if (page === activePage) {
+      console.log("already on the page number:", page);
+      return;
+    }
     handleGetMoviesOnThePage(movieTitle, page);
     setMovieTitle(movieTitle);
   };
