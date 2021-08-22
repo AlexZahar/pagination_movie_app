@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { IState as Props } from "./HomePage";
+import "./check.css";
 interface IProps {
   pagination: Props["pagination"];
   activePage: Props["activePage"];
@@ -7,17 +8,17 @@ interface IProps {
   handleNewPage: (page: string) => void;
 }
 
-const Pagination: React.FC<IProps> = ({
-  pagination,
-  activePage,
-  setActivePage,
-  handleNewPage,
-}) => {
+const Pagination: React.FC<IProps> = ({ pagination, handleNewPage }) => {
   const [currentPage, setCurrentPage] = useState("1");
-
+  const [activePageIndex, setActivePageIndex] = useState(pagination[0]);
   useEffect(() => {
     console.log("moving to page number:", currentPage);
   }, [currentPage]);
+
+  //   Handle the active page state to highlight the current active page
+  const handleActivePage = (page: string) => {
+    setActivePageIndex(page);
+  };
 
   const renderPagination = () => {
     return pagination.map((page) => {
@@ -29,7 +30,9 @@ const Pagination: React.FC<IProps> = ({
             // console.log(currentPageIndex, "current page index");
             setCurrentPage(page);
             handleNewPage(page);
+            handleActivePage(page);
           }}
+          className={page === activePageIndex ? "active_page" : ""}
         >
           {page}
         </div>
@@ -44,6 +47,7 @@ const Pagination: React.FC<IProps> = ({
     const nextPage = (parseInt(currentPage) + 1).toString();
     setCurrentPage(nextPage);
     handleNewPage(nextPage);
+    handleActivePage(nextPage);
     console.log(nextPage, "nextpage");
   };
 
@@ -55,6 +59,7 @@ const Pagination: React.FC<IProps> = ({
     const prevPage = (parseInt(currentPage) - 1).toString();
     setCurrentPage(prevPage);
     handleNewPage(prevPage);
+    handleActivePage(prevPage);
     console.log(prevPage, "nextpage");
   };
   return (
@@ -64,6 +69,7 @@ const Pagination: React.FC<IProps> = ({
         onClick={() => {
           setCurrentPage(pagination[0]);
           handleNewPage(pagination[0]);
+          handleActivePage(pagination[0]);
         }}
       >
         First Page
@@ -90,6 +96,7 @@ const Pagination: React.FC<IProps> = ({
           console.log("LENGHT -1", pagination[pagination.length - 1]);
           setCurrentPage(pagination[pagination.length - 1]);
           handleNewPage(pagination[pagination.length - 1]);
+          handleActivePage(pagination[pagination.length - 1]);
         }}
       >
         Last Page
