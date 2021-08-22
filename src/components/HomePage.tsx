@@ -30,12 +30,25 @@ export const Button = styled.button`
   font-size: 16px;
   /* max-width: 100px;
   width: 100%; */
+  :disabled {
+    color: red;
+  }
 
   :hover {
     cursor: pointer;
     color: white;
     background: #04aa6d;
     /* font-weight: bolder; */
+  }
+  :disabled {
+    color: gray;
+    border: 2px solid gray;
+    :hover {
+      border: 2px solid gray;
+      color: gray;
+      background-color: white;
+      cursor: not-allowed;
+    }
   }
 `;
 const Table = styled.table`
