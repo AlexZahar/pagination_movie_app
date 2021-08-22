@@ -21,14 +21,18 @@ export interface IState {
 function HomePage() {
   const [movies, setMovies] = useState<IState["movies"]>([]);
   const [loading, setLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
   const [error, setError] = useState("");
-  const [movieTitle, setMovieTitle] = useState("");
+  const [movieTitle, setMovieTitle] = useState("Jumbo");
   const [pagination, setPagination] = useState<IState["pagination"]>([]);
   const [activePage, setActivePage] = useState<IState["activePage"]>("");
   // Fetching a list of movies for test
 
-  async function fetchMovieList(title: string, page?: string) {
-    await fetch(`${apiUrl}&s=${title}&page=${activePage}`)
+  async function fetchMovieList(title: string) {
+    setIsError(false);
+
+    console.log(movieTitle, "Fetch function");
+    await fetch(`${apiUrl}&s=${title}`)
       // await fetch(`${apiUrl}&s=${title}&page=${page}`)
       .then((response) => {
         if (response.ok) return response.json();
@@ -37,8 +41,10 @@ function HomePage() {
       .then((data) => {
         if (data.Error) {
           setError(data.Error);
+          setIsError(true);
           return;
         }
+        console.log(data);
         // Populate the movie list array
         setMovies(data.Search);
 
@@ -54,25 +60,45 @@ function HomePage() {
         }
         setPagination(pages);
         // }
+
         setLoading(false);
       })
       .catch((error) => console.log(error));
   }
+  const handleGetMoviesOnThePage = async (title: string, page: string) => {
+    await fetch(`${apiUrl}&s=${title}&page=${page}`)
+      .then((response) => {
+        if (response.ok) return response.json();
+        throw new Error("something went wrong while requesting posts");
+      })
+      .then((data) => {
+        if (data.Error) {
+          setError(data.Error);
+          return;
+        }
 
+        // Populate the movie list array
+        setMovies(data.Search);
+
+        // }
+
+        setLoading(false);
+      })
+      .catch((error) => console.log(error));
+  };
   useEffect(() => {
-    console.log("pagination.length", pagination.length);
-
-    fetchMovieList(movieTitle, activePage);
+    handleNewPage(activePage);
   }, [activePage]);
 
   // Saving the user input movie title into it's own state
-  const handleTitleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMovieTitle(e.target.value);
   };
 
   const handleNewPage = (page: string) => {
     setActivePage(page);
-    setMovieTitle("");
+    handleGetMoviesOnThePage(movieTitle, page);
+    setMovieTitle(movieTitle);
   };
   return (
     <div>
@@ -83,9 +109,15 @@ function HomePage() {
           placeholder="Search your title"
           onChange={handleTitleChange}
         />
-        <button onClick={() => fetchMovieList(movieTitle)}>Search Title</button>
+        <button
+          onClick={() => {
+            fetchMovieList(movieTitle);
+          }}
+        >
+          Search
+        </button>
       </div>
-      {!loading ? (
+      {!loading && !isError ? (
         <div>
           <table>
             <thead>
@@ -107,7 +139,7 @@ function HomePage() {
           ) : null}
         </div>
       ) : (
-        <h2>Choose a movie title</h2>
+        <p>{error}</p>
       )}
     </div>
   );
