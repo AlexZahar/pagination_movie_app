@@ -60,7 +60,8 @@ function HomePage() {
   }
 
   useEffect(() => {
-    console.log("changed");
+    console.log("pagination.length", pagination.length);
+
     fetchMovieList(movieTitle, activePage);
   }, [activePage]);
 
@@ -71,6 +72,7 @@ function HomePage() {
 
   const handleNewPage = (page: string) => {
     setActivePage(page);
+    setMovieTitle("");
   };
   return (
     <div>
@@ -95,12 +97,14 @@ function HomePage() {
 
             <List movies={movies}> </List>
           </table>
-          <Pagination
-            pagination={pagination}
-            activePage={activePage}
-            setActivePage={setActivePage}
-            handleNewPage={handleNewPage}
-          ></Pagination>
+          {pagination.length > 1 ? (
+            <Pagination
+              pagination={pagination}
+              activePage={activePage}
+              setActivePage={setActivePage}
+              handleNewPage={handleNewPage}
+            />
+          ) : null}
         </div>
       ) : (
         <h2>Choose a movie title</h2>
