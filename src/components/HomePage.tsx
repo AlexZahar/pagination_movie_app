@@ -43,17 +43,17 @@ function HomePage() {
         setMovies(data.Search);
 
         // Calculate the number of pages available for this title only if not calculated before.
-        if (!pagination.length) {
-          console.log("calculating pagination");
+        // if (!pagination.length) {
+        console.log("calculating pagination");
 
-          //  Using Math.ceil() to round pages number up to the next largest integer.
-          const totalPages = Math.ceil(parseInt(data.totalResults) / 10);
-          const pages = [];
-          for (let p = 1; p <= totalPages; p++) {
-            pages.push(p.toString());
-          }
-          setPagination(pages);
+        //  Using Math.ceil() to round pages number up to the next largest integer.
+        const totalPages = Math.ceil(parseInt(data.totalResults) / 10);
+        const pages = [];
+        for (let p = 1; p <= totalPages; p++) {
+          pages.push(p.toString());
         }
+        setPagination(pages);
+        // }
         setLoading(false);
       })
       .catch((error) => console.log(error));

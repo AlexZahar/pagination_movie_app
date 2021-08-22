@@ -67,9 +67,9 @@ const Pagination: React.FC<IProps> = ({
         First Page
       </button>
       <div className="PaginationChildWrapper">
-        <h3 onClick={() => handlePrevPage()}> &#8592; </h3>
+        <button onClick={() => handlePrevPage()}> &#8592; </button>
         <div>{renderPagination()}</div>
-        <h3 onClick={() => handleNextPage()}>&#8594;</h3>
+        <button onClick={() => handleNextPage()}>&#8594;</button>
       </div>
       <button
         onClick={() => {
