@@ -1,3 +1,4 @@
+import styled from "styled-components";
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import List from "./List";
@@ -5,7 +6,65 @@ import Pagination from "./Pagination";
 
 const apiUrl = "http://www.omdbapi.com/?apikey=2827a2ec";
 // http://www.omdbapi.com/?i=tt3896198&apikey=2827a2ec
+const SearchWrapper = styled.div`
+  margin-top: 40px;
+  input {
+    font-size: 20px;
+  }
+`;
+const TableWrapper = styled.div`
+  display: flex;
+  max-width: 600px;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  margin: 40px auto;
+`;
+export const Button = styled.button`
+  background: transparent;
+  border-radius: 8px;
+  border: 2px solid #04aa6d;
+  color: #04aa6d;
+  margin: 0 1em;
+  padding: 0.25em 1em;
+  font-size: 16px;
+  /* max-width: 100px;
+  width: 100%; */
 
+  :hover {
+    cursor: pointer;
+    color: white;
+    background: #04aa6d;
+    /* font-weight: bolder; */
+  }
+`;
+const Table = styled.table`
+  font-size: 20px;
+  margin-bottom: 40px;
+
+  th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #04aa6d;
+    color: white;
+  }
+  td,
+  th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  tr {
+    height: 80px;
+  }
+  tr:nth-child(even) {
+    background-color: #dbdbdb67;
+  }
+  tr:hover {
+    background-color: #64d4abca;
+    /* color: white; */
+  }
+`;
 export interface IState {
   movies: {
     Poster: string;
@@ -26,6 +85,7 @@ function HomePage() {
   const [movieTitle, setMovieTitle] = useState("");
   const [pagination, setPagination] = useState<IState["pagination"]>([]);
   const [activePage, setActivePage] = useState<IState["activePage"]>("");
+
   // Fetching a list of movies for test
 
   async function fetchMovieList(title: string) {
@@ -46,6 +106,7 @@ function HomePage() {
         }
         console.log(data);
         // Populate the movie list array
+        setPagination(["0"]);
         setMovies(data.Search);
 
         // Calculate the number of pages available for this title only if not calculated before.
@@ -97,33 +158,39 @@ function HomePage() {
 
   const handleNewPage = (page: string) => {
     setActivePage(page);
+
     if (page === activePage) {
       console.log("already on the page number:", page);
       return;
     }
+    //  useMemo(
+    //   () => handleGetMoviesOnThePage(movieTitle, page),
+    //   [movieTitle, page]
+    // );
+
     handleGetMoviesOnThePage(movieTitle, page);
-    setMovieTitle(movieTitle);
+    // setMovieTitle(movieTitle);
   };
   return (
     <div>
-      <div>
+      <SearchWrapper>
         <input
           type="text"
           value={movieTitle}
           placeholder="Search your title"
           onChange={handleTitleChange}
         />
-        <button
+        <Button
           onClick={() => {
             fetchMovieList(movieTitle);
           }}
         >
           Search
-        </button>
-      </div>
+        </Button>
+      </SearchWrapper>
       {!loading && !isError ? (
-        <div>
-          <table>
+        <TableWrapper>
+          <Table>
             <thead>
               <tr>
                 <th>Title</th>
@@ -132,15 +199,16 @@ function HomePage() {
             </thead>
 
             <List movies={movies}> </List>
-          </table>
-
-          <Pagination
-            pagination={pagination}
-            activePage={activePage}
-            setActivePage={setActivePage}
-            handleNewPage={handleNewPage}
-          />
-        </div>
+          </Table>
+          {pagination.length > 1 ? (
+            <Pagination
+              pagination={pagination}
+              activePage={activePage}
+              setActivePage={setActivePage}
+              handleNewPage={handleNewPage}
+            />
+          ) : null}
+        </TableWrapper>
       ) : (
         <p>{error}</p>
       )}

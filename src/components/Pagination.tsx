@@ -1,6 +1,39 @@
 import React, { useState, useEffect } from "react";
 import { IState as Props } from "./HomePage";
-import "./check.css";
+import styled from "styled-components";
+import { Button } from "./HomePage";
+
+const PaginationWrapper = styled.div`
+  /* max-width: 600px; */
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+`;
+const PaginationChildrenWrapper = styled.div`
+  max-width: 380px;
+  width: 100%;
+  text-overflow: ellipsis;
+  overflow: auto;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  .active_page {
+    font-size: 22px;
+    color: #25884e;
+    font-weight: bolder;
+  }
+`;
+const ChildPage = styled.div`
+  font-size: 22px;
+  /* color: gray; */
+  margin: 0 8px;
+  width: 12px;
+  text-align: center;
+  :hover {
+    cursor: pointer;
+  }
+`;
 interface IProps {
   pagination: Props["pagination"];
   activePage: Props["activePage"];
@@ -23,19 +56,17 @@ const Pagination: React.FC<IProps> = ({ pagination, handleNewPage }) => {
   const renderPagination = () => {
     return pagination.map((page) => {
       return (
-        <div
+        <ChildPage
           key={page}
           onClick={() => {
-            // setPageIndex(pagination.indexOf(page));
-            // console.log(currentPageIndex, "current page index");
             setCurrentPage(page);
             handleNewPage(page);
             handleActivePage(page);
           }}
           className={page === activePageIndex ? "active_page" : ""}
         >
-          {page}
-        </div>
+          <p>{page} </p>
+        </ChildPage>
       );
     });
   };
@@ -63,8 +94,8 @@ const Pagination: React.FC<IProps> = ({ pagination, handleNewPage }) => {
     console.log(prevPage, "nextpage");
   };
   return (
-    <div className="PaginationParrent">
-      <button
+    <PaginationWrapper className="PaginationParrent">
+      <Button
         disabled={currentPage === pagination[0]}
         onClick={() => {
           setCurrentPage(pagination[0]);
@@ -73,24 +104,23 @@ const Pagination: React.FC<IProps> = ({ pagination, handleNewPage }) => {
         }}
       >
         First Page
-      </button>
-      <div className="PaginationChildWrapper">
-        <button
+      </Button>
+      <PaginationChildrenWrapper className="PaginationChildWrapper">
+        <Button
           disabled={currentPage === pagination[0]}
           onClick={() => handlePrevPage()}
         >
-          {" "}
-          &#8592;{" "}
-        </button>
-        <div>{renderPagination()}</div>
-        <button
+          &#8592;
+        </Button>
+        {renderPagination()}
+        <Button
           disabled={currentPage === pagination[pagination.length - 1]}
           onClick={() => handleNextPage()}
         >
           &#8594;
-        </button>
-      </div>
-      <button
+        </Button>
+      </PaginationChildrenWrapper>
+      <Button
         disabled={currentPage === pagination[pagination.length - 1]}
         onClick={() => {
           console.log("LENGHT -1", pagination[pagination.length - 1]);
@@ -100,8 +130,8 @@ const Pagination: React.FC<IProps> = ({ pagination, handleNewPage }) => {
         }}
       >
         Last Page
-      </button>
-    </div>
+      </Button>
+    </PaginationWrapper>
   );
 };
 

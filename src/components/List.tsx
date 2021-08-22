@@ -1,5 +1,14 @@
 import React from "react";
 import { IState as Props } from "./HomePage";
+// import styled from "styled-components";
+
+// const TableRow = styled.tr`
+//   font-size: 50px;
+//   td {
+//     color: red;
+//   }
+// `;
+
 interface IProps {
   movies: Props["movies"];
 }
