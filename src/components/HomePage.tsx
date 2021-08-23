@@ -188,6 +188,7 @@ function HomePage() {
     <div>
       <SearchWrapper>
         <input
+          data-cy="input-movie-title"
           type="text"
           value={movieTitle}
           placeholder="Search your title"
@@ -197,6 +198,7 @@ function HomePage() {
           onClick={() => {
             fetchMovieList(movieTitle);
           }}
+          data-cy="btn-search-title"
         >
           Search
         </Button>

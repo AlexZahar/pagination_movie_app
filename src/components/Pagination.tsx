@@ -20,7 +20,7 @@ const PaginationChildrenWrapper = styled.div`
   justify-content: space-evenly;
   .active_page {
     font-size: 22px;
-    color: #25884e;
+    color: rgb(37, 136, 78);
     font-weight: bolder;
   }
 `;
@@ -63,6 +63,7 @@ const Pagination: React.FC<IProps> = ({ pagination, handleNewPage }) => {
             handleNewPage(page);
             handleActivePage(page);
           }}
+          data-cy="pagination-children"
           className={page === activePageIndex ? "active_page" : ""}
         >
           <p>{page} </p>
@@ -102,13 +103,15 @@ const Pagination: React.FC<IProps> = ({ pagination, handleNewPage }) => {
           handleNewPage(pagination[0]);
           handleActivePage(pagination[0]);
         }}
+        data-cy="btn-first-page"
       >
-        First Page
+        First
       </Button>
       <PaginationChildrenWrapper className="PaginationChildWrapper">
         <Button
           disabled={currentPage === pagination[0]}
           onClick={() => handlePrevPage()}
+          data-cy="btn-previous-page"
         >
           &#8592;
         </Button>
@@ -116,6 +119,7 @@ const Pagination: React.FC<IProps> = ({ pagination, handleNewPage }) => {
         <Button
           disabled={currentPage === pagination[pagination.length - 1]}
           onClick={() => handleNextPage()}
+          data-cy="btn-next-page"
         >
           &#8594;
         </Button>
@@ -128,8 +132,9 @@ const Pagination: React.FC<IProps> = ({ pagination, handleNewPage }) => {
           handleNewPage(pagination[pagination.length - 1]);
           handleActivePage(pagination[pagination.length - 1]);
         }}
+        data-cy="btn-last-page"
       >
-        Last Page
+        Last
       </Button>
     </PaginationWrapper>
   );
