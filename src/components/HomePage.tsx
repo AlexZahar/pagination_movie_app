@@ -188,6 +188,7 @@ function HomePage() {
     <div>
       <SearchWrapper>
         <input
+          data-testid="search-input"
           data-cy="input-movie-title"
           type="text"
           value={movieTitle}
@@ -199,13 +200,14 @@ function HomePage() {
             fetchMovieList(movieTitle);
           }}
           data-cy="btn-search-title"
+          data-testid="btn-search-title"
         >
           Search
         </Button>
       </SearchWrapper>
       {!loading && !isError ? (
         <TableWrapper>
-          <Table>
+          <Table data-testid="table">
             <thead>
               <tr>
                 <th>Title</th>
