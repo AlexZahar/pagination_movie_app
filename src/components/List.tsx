@@ -12,19 +12,16 @@ import { IState as Props } from "./HomePage";
 interface IProps {
   movies: Props["movies"];
 }
-const List: React.FC<IProps> = ({ movies }) => {
-  const renderList = (): JSX.Element[] => {
-    return movies.map((movie) => {
-      return (
-        <tr key={movie.imdbID}>
-          <td>{movie.Title}</td>
-          <td>{movie.Year}</td>
-        </tr>
-      );
-    });
-  };
 
-  return <tbody>{renderList()}</tbody>;
+const ListItem = ({movie}) => (
+  <tr key={movie.imdbID}>
+    <td>{movie.Title}</td>
+    <td>{movie.Year}</td>
+  </tr>
+)
+
+const List: React.FC<IProps> = ({ movies }) => {
+  return <tbody>{movies.map((movie) => <ListItem movie={movie}/>)}</tbody>;
 };
 
 export default List;

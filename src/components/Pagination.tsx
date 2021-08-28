@@ -76,6 +76,8 @@ const Pagination: React.FC<IProps> = ({ pagination, handleNewPage }) => {
     if (parseInt(currentPage) === pagination.length) {
       return;
     }
+    // setActivePage(activePage + 1)
+
     const nextPage = (parseInt(currentPage) + 1).toString();
     setCurrentPage(nextPage);
     handleNewPage(nextPage);

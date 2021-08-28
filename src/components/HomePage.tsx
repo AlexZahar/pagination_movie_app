@@ -1,167 +1,76 @@
 import styled from "styled-components";
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
+
 import List from "./List";
 import Pagination from "./Pagination";
 
+// SOLID Principles
 const apiUrl = "http://www.omdbapi.com/?apikey=2827a2ec";
 // http://www.omdbapi.com/?i=tt3896198&apikey=2827a2ec
-const SearchWrapper = styled.div`
-  margin-top: 40px;
-  input {
-    font-size: 20px;
-  }
-`;
-const TableWrapper = styled.div`
-  display: flex;
-  max-width: 600px;
-  width: 100%;
-  flex-direction: column;
-  justify-content: center;
-  margin: 40px auto;
-`;
-export const Button = styled.button`
-  background: transparent;
-  border-radius: 8px;
-  border: 2px solid #04aa6d;
-  color: #04aa6d;
-  margin: 0 1em;
-  padding: 0.25em 1em;
-  font-size: 16px;
-  /* max-width: 100px;
-  width: 100%; */
-  :disabled {
-    color: red;
-  }
 
-  :hover {
-    cursor: pointer;
-    color: white;
-    background: #04aa6d;
-    /* font-weight: bolder; */
-  }
-  :disabled {
-    color: gray;
-    border: 2px solid gray;
-    :hover {
-      border: 2px solid gray;
-      color: gray;
-      background-color: white;
-      cursor: not-allowed;
-    }
-  }
-`;
-const Table = styled.table`
-  font-size: 20px;
-  margin-bottom: 40px;
-
-  th {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    text-align: left;
-    background-color: #04aa6d;
-    color: white;
-  }
-  td,
-  th {
-    border: 1px solid #ddd;
-    padding: 8px;
-  }
-  tr {
-    height: 80px;
-  }
-  tr:nth-child(even) {
-    background-color: #dbdbdb67;
-  }
-  tr:hover {
-    background-color: #64d4abca;
-    /* color: white; */
-  }
-`;
-export interface IState {
-  movies: {
+export interface IMovie{
+   //try to use better names since it can be confused
     Poster: string;
     Title: string;
     Type: string;
     Year: string;
     imdbID: string;
-  }[];
+}
+
+export interface IState {
+  movies: IMovie[];
   pagination: string[];
   activePage: string;
 }
 
 function HomePage() {
-  const [movies, setMovies] = useState<IState["movies"]>([]);
-  const [loading, setLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
-  const [error, setError] = useState("");
-  const [movieTitle, setMovieTitle] = useState("");
-  const [pagination, setPagination] = useState<IState["pagination"]>([]);
-  const [activePage, setActivePage] = useState<IState["activePage"]>("");
+  // As little as possible, as much as necesary
+  const [movies, setMovies] = useState<IState["movies"]>([]); // YES
+  const [loading, setLoading] = useState(true); // YES
+  const [isError, setIsError] = useState(false); // YES
+  const [error, setError] = useState(""); // YES
+  const [movieTitle, setMovieTitle] = useState(""); // SearchTerm
+
+  const [pagination, setPagination] = useState<IState["pagination"]>([]);// YES --Y as a single number totalPage
+  const [activePage, setActivePage] = useState<number>(0);// YES
 
   // Fetching a list of movies for test
-
-  async function fetchMovieList(title: string) {
+  async function fetchMovieList() {
     setIsError(false);
 
-    console.log(movieTitle, "Fetch function");
-    await fetch(`${apiUrl}&s=${title}`)
-      // await fetch(`${apiUrl}&s=${title}&page=${page}`)
-      .then((response) => {
-        if (response.ok) return response.json();
-        throw new Error("something went wrong while requesting posts");
-      })
-      .then((data) => {
-        if (data.Error) {
-          setError(data.Error);
-          setIsError(true);
-          return;
-        }
-        console.log(data);
-        // Populate the movie list array
-        setPagination(["0"]);
-        setMovies(data.Search);
+    const response = await fetch(`${apiUrl}&s=${movieTitle}&page=${activePage}`);
+    const data = await response.json();
 
-        // Calculate the number of pages available for this title only if not calculated before.
-        // if (!pagination.length) {
-        console.log("calculating pagination");
+    if (data.Error) {
+      setError(data.Error);
+      setIsError(true);
+      return;
+    }
 
-        //  Using Math.ceil() to round pages number up to the next largest integer.
-        const totalPages = Math.ceil(parseInt(data.totalResults) / 10);
-        const pages = [];
-        for (let p = 1; p <= totalPages; p++) {
-          pages.push(p.toString());
-        }
-        setPagination(pages);
-        // }
+    // Populate the movie list array
+    setPagination(["0"]);
+    setMovies(data.Search);
 
-        setLoading(false);
-      })
-      .catch((error) => console.log(error));
+    // Calculate the number of pages available for this title only if not calculated before.
+    // if (!pagination.length) {
+    console.log("calculating pagination");
+
+    //  Using Math.ceil() to round pages number up to the next largest integer.
+    const totalPages = Math.ceil(parseInt(data.totalResults) / 10);
+    const pages = [];
+    for (let p = 1; p <= totalPages; p++) {
+      pages.push(p.toString());
+    }
+    setPagination(pages);
+
+    setLoading(false);
+
   }
-  const handleGetMoviesOnThePage = async (title: string, page: string) => {
-    await fetch(`${apiUrl}&s=${title}&page=${page}`)
-      .then((response) => {
-        if (response.ok) return response.json();
-        throw new Error("something went wrong while requesting posts");
-      })
-      .then((data) => {
-        if (data.Error) {
-          setError(data.Error);
-          return;
-        }
 
-        // Populate the movie list array
-        setMovies(data.Search);
-
-        // }
-
-        setLoading(false);
-      })
-      .catch((error) => console.log(error));
-  };
   useEffect(() => {
-    handleNewPage(activePage);
+    // handleNewPage(activePage);
+    fetchMovieList()
   }, [activePage]);
 
   // Saving the user input movie title into it's own state
@@ -169,21 +78,6 @@ function HomePage() {
     setMovieTitle(e.target.value);
   };
 
-  const handleNewPage = (page: string) => {
-    setActivePage(page);
-
-    if (page === activePage) {
-      console.log("already on the page number:", page);
-      return;
-    }
-    //  useMemo(
-    //   () => handleGetMoviesOnThePage(movieTitle, page),
-    //   [movieTitle, page]
-    // );
-
-    handleGetMoviesOnThePage(movieTitle, page);
-    // setMovieTitle(movieTitle);
-  };
   return (
     <div>
       <SearchWrapper>
@@ -234,3 +128,79 @@ function HomePage() {
 }
 
 export default HomePage;
+
+
+const SearchWrapper = styled.div`
+  margin-top: 40px;
+  input {
+    font-size: 20px;
+  }
+`;
+
+const TableWrapper = styled.div`
+  display: flex;
+  max-width: 600px;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  margin: 40px auto;
+`;
+
+export const Button = styled.button`
+  background: transparent;
+  border-radius: 8px;
+  border: 2px solid #04aa6d;
+  color: #04aa6d;
+  margin: 0 1em;
+  padding: 0.25em 1em;
+  font-size: 16px;
+  /* max-width: 100px;
+  width: 100%; */
+  :disabled {
+    color: red;
+  }
+
+  :hover {
+    cursor: pointer;
+    color: white;
+    background: #04aa6d;
+    /* font-weight: bolder; */
+  }
+  :disabled {
+    color: gray;
+    border: 2px solid gray;
+    :hover {
+      border: 2px solid gray;
+      color: gray;
+      background-color: white;
+      cursor: not-allowed;
+    }
+  }
+`;
+
+const Table = styled.table`
+  font-size: 20px;
+  margin-bottom: 40px;
+  th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #04aa6d;
+    color: white;
+  }
+  td,
+  th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  tr {
+    height: 80px;
+  }
+  tr:nth-child(even) {
+    background-color: #dbdbdb67;
+  }
+  tr:hover {
+    background-color: #64d4abca;
+    /* color: white; */
+  }
+`;

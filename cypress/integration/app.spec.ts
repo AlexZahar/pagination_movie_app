@@ -1,5 +1,5 @@
 /// <reference types="cypress" />
-
+// read about CY:INTERCEPT AND FIXTURES
 context('Actions', () => {
   beforeEach(() => {
     cy.visit('http://localhost:3000')
