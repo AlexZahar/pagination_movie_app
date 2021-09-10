@@ -20,7 +20,7 @@ test("Search for a movie title", () => {
     "Jumbo"
   );
 
-  userEvent.click(screen.getByTestId("search-input"));
+  fireEvent.click(screen.getByTestId("btn-search-title"));
 
   expect(screen.getByText(/Title/)).toBeInTheDocument();
 });
