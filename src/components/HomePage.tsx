@@ -87,10 +87,11 @@ function HomePage() {
   // Optimizing the APP / JS
   // 1. Memoization --> avoid recomputing / redlecaring functions / values on render
 
-  // Wil be instanciated, parsed, declard on every render
+  // Will be instanciated, parsed, declared on every render
   function test() {
     return movieTitle;
   }
+
   // Memoize Functions
   /*
   useCallback will return a memoized version of the callback that only 
@@ -103,7 +104,7 @@ function HomePage() {
       return movieTitle;
     },
     [movieTitle]
-  ); // this function wills stay the same, unless movieTitle changes
+  ); // this function will stay the same, unless movieTitle changes
 
   // Non optimized -- will run on every render
   const value = hashTitle(movieTitle);
